@@ -1,28 +1,29 @@
 ﻿using System;
+using System.Linq;
 
 namespace Calculadora
 {
     internal class CalculadoraRemasterizada
     {
-        private const string COCIENTE = "  Cociente: ";
-        private const string SELECT_MESSAGE = "  Digita cualquier número para ingresar 2 nuevos números o 0 para finalizar. ";
+        private const string SELECT_MESSAGE = "  Digita cualquier número para volver al menú o 0 para finalizar. ";
         private const string END_MESSAGE = "  Has finalizado la calculadora, hasta pronto!";
+        private const string LINES = "  |─────────────────────────|";
 
         static void Main(string[] args)
         {
-            int option = 1;
-            double num1, num2, sum, res, prod, coci;
+            int option = 1, i, j;
+            double num1, num2, sum = 0, res = 0, prod = 1, coci = 1, aux;
 
             while (option != 0)
             {
                 do
                 {
                     Console.Clear();
-                    Console.WriteLine("  |─────────────────────────|");
+                    Console.WriteLine(LINES);
                     Console.WriteLine("  | Calculadora Aritmética! |");
-                    Console.WriteLine("  |─────────────────────────|");
+                    Console.WriteLine(LINES);
                     Console.WriteLine("  |    Menú Operaciones     |");
-                    Console.WriteLine("  |─────────────────────────|");
+                    Console.WriteLine(LINES);
                     Console.WriteLine("  |   Ingresa una de las    |");
                     Console.WriteLine("  |  siguientes opciones:   |");
                     Console.WriteLine("  |                         |");
@@ -31,7 +32,7 @@ namespace Calculadora
                     Console.WriteLine("  | 3. Producto             |");
                     Console.WriteLine("  | 4. Cociente             |");
                     Console.WriteLine("  |                         |");
-                    Console.WriteLine("  |─────────────────────────|");
+                    Console.WriteLine(LINES);
                     Console.Write("   Opción: ");
 
                 } while (!int.TryParse(Console.ReadLine(), out option));
@@ -46,58 +47,67 @@ namespace Calculadora
                 }
                 else
                 {
-                    Console.Write("  Ingresa tu primer número: ");
-                    num1 = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("");
+                    Console.Write("  ¿Cuántos números deseas operar?: ");
+                    double[] numbers = new double[Convert.ToInt32(Console.ReadLine())];
 
-                    Console.Write("  Ingresa tu segundo número: ");
-                    num2 = Convert.ToDouble(Console.ReadLine());
-                    Console.WriteLine("");
+                    //if(numbers.Count() == 0)
+                    //{
+                    //    Console.WriteLine("   Debes ingresar al menos 2 números");
+                    //}
+
+                    for (i = 0; i < numbers.Length; i++)
+                    {
+                        Console.Write("  Ingresa un número: ");
+                        numbers[i] = Convert.ToDouble(Console.ReadLine());
+                        Console.WriteLine("");
+                    }
+
+                    //Begin Sort Array
+                    for (i = 0; i < numbers.Length; i++)
+                    {
+                        for(j = (i + 1); j < numbers.Length; j++)
+                        {
+                            if (numbers[i] > numbers[j])
+                            {
+                                aux = numbers[j];
+                                numbers[j] = numbers[i];
+                                numbers[i] = aux;
+                            }
+                        }
+                    }
+                    //End Sort Array
 
                     switch (option)
                     {
                         case 1:
-                            sum = num1 + num2;
-                            Console.WriteLine(String.Format("  Suma: {0} + {1} = {2}", num1, num2, sum));
+                            for (i = 0; i < numbers.Length; i++)
+                                sum = sum + numbers[i];
+                            Console.WriteLine(String.Format("  La suma es: {0}", sum));
                             Console.WriteLine("");
                             break;
 
                         case 2:
-                            res = num1 - num2;
-                            Console.WriteLine(String.Format("  Resta: {0} - {1} = {2}", num1, num2, res));
+                            for (i = 0; i < numbers.Length; i++)
+                                res = numbers[i] - res;
+                            Console.WriteLine(String.Format("  La resta es: {0}", res));
                             Console.WriteLine("");
                             break;
 
                         case 3:
-                            prod = num1 * num2;
-                            Console.WriteLine(String.Format("  Producto: {0} x {1} = {2}", num1, num2,prod));
+                            for (i = 0; i < numbers.Length; i++)
+                                prod = numbers[i] * prod;
+                            Console.WriteLine(String.Format("  El producto es: {0}", prod));
                             Console.WriteLine("");
                             break;
 
                         case 4:
-                            if (num1 == 0 && num2 == 0)
-                            {
-                                Console.WriteLine("  División indeterminada");
-                                Console.WriteLine("");
-                            }
-                            else if (num1 == 0)
-                            {
-                                coci = num1 / num2;
-                                Console.WriteLine(String.Format("{0}{1} ÷ {2} = {3}", COCIENTE, num1, num2, coci));
-                                Console.WriteLine("");
-                            }
-                            else if (num2 == 0)
-                            {
-                                coci = num2 / num1;
-                                Console.WriteLine(String.Format("{0}{1} ÷ {2} = {3}", COCIENTE, num2, num1, coci));
-                                Console.WriteLine("");
-                            }
+                            for (i = 0; i < numbers.Length; i++)
+                                coci = numbers[i] / coci;
+                            if (Double.IsNaN(coci))
+                                Console.WriteLine("  El cociente es indeterminado");
                             else
-                            {
-                                coci = num1 / num2;
-                                Console.WriteLine(String.Format("{0}{1} ÷ {2} = {3}", COCIENTE, num1, num2, coci));
-                                Console.WriteLine("");
-                            }
+                                Console.WriteLine(String.Format("  El cociente es: {0}", coci));
+                            Console.WriteLine("");
                             break;
                     }
 
